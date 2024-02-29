@@ -1,0 +1,74 @@
+{
+	"name": "node-project-manager",
+	"displayName": "node-project-manager",
+	"description": "A command palette extension for managing node projects",
+	"version": "0.0.1",
+	"publisher": "marcosreuquen",
+	"repository": "https://github.com/Marcosreuquen/node-project-manager",
+	"engines": {
+		"vscode": "^1.74.0"
+	},
+	"categories": [
+		"Other"
+	],
+	"activationEvents": [],
+	"main": "./out/extension.js",
+	"contributes": {
+		"commands": [
+			{
+				"command": "extension.useScripts",
+				"title": "Use Project Scripts",
+				"category": "Node Project Manager"
+			},
+			{
+				"command": "extension.installDependencies",
+				"title": "Install Project Dependencies",
+				"category": "Node Project Manager"
+			},
+			{
+				"command": "extension.addDependency",
+				"title": "Add Dependency",
+				"category": "Node Project Manager"
+			},
+			{
+				"command": "extension.removeDependency",
+				"title": "Remove Dependency",
+				"category": "Node Project Manager"
+			},
+			{
+				"command": "extension.updateDependency",
+				"title": "Update Dependency",
+				"category": "Node Project Manager"
+			},
+			{
+				"command": "extension.auditDependencies",
+				"title": "Audit Dependencies",
+				"category": "Node Project Manager"
+			},
+			{
+				"command": "extension.addScript",
+				"title": "Add a script to your project",
+				"category": "Node Project Manager"
+			},
+			{
+				"command": "extension.addDevDependency",
+				"title": "Add a dev dependency to your project",
+				"category": "Node Project Manager"
+			}
+		]
+	},
+	"scripts": {
+		"vscode:prepublish": "npm run compile",
+		"compile": "tsc -p ./",
+		"lint": "eslint \"src/**/*.ts\"",
+		"watch": "tsc -watch -p ./"
+	},
+	"devDependencies": {
+		"@types/node": "^16.18.34",
+		"@types/vscode": "^1.73.0",
+		"@typescript-eslint/eslint-plugin": "^6.7.0",
+		"@typescript-eslint/parser": "^6.7.0",
+		"eslint": "^8.26.0",
+		"typescript": "^5.3.2"
+	}
+}
