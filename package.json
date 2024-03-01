@@ -2,7 +2,7 @@
 	"name": "node-project-manager",
 	"displayName": "node-project-manager",
 	"description": "A command palette extension for managing node projects",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"publisher": "marcosreuquen",
 	"repository": "https://github.com/Marcosreuquen/node-project-manager",
 	"engines": {

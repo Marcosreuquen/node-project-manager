@@ -5,12 +5,12 @@ import * as fs from 'fs';
 declare type PackageManagerName = "npm" | "yarn" | "pnpm" | "bun" 
 declare type InstalledPackages = { name: string, version:any, isDev:boolean }
 export default class Client {
-  name:PackageManagerName;
-  constructor(name?:PackageManagerName) {
-    const packageLockPath = vscode.workspace.rootPath + '/package-lock.json';
-    const yarnLockPath = vscode.workspace.rootPath + '/yarn.lock';
-    const pnpmLockPath = vscode.workspace.rootPath + '/pnpm-lock.yaml';
-    const bunLockPath = vscode.workspace.rootPath + '/bun.lockb';
+  name: PackageManagerName;
+  constructor(name?: PackageManagerName) {
+    const packageLockPath = vscode.workspace.rootPath + "/package-lock.json";
+    const yarnLockPath = vscode.workspace.rootPath + "/yarn.lock";
+    const pnpmLockPath = vscode.workspace.rootPath + "/pnpm-lock.yaml";
+    const bunLockPath = vscode.workspace.rootPath + "/bun.lockb";
 
     if (fs.existsSync(packageLockPath)) {
       this.name = "npm";
@@ -20,37 +20,51 @@ export default class Client {
       this.name = "pnpm";
     } else if (fs.existsSync(bunLockPath)) {
       this.name = "bun";
-    }else{
-      if (name) {this.name = name;}
-      else {this.name = "npm";}
+    } else {
+      if (name) {
+        this.name = name;
+      } else {
+        this.name = "npm";
+      }
     }
   }
-  
-  getPackages():InstalledPackages[] {
-    let result:InstalledPackages[] = [];
-    const packageJsonPath = vscode.workspace.rootPath + '/package.json';
+
+  getPackages(): InstalledPackages[] {
+    let result: InstalledPackages[] = [];
+    const packageJsonPath = vscode.workspace.rootPath + "/package.json";
     if (fs.existsSync(packageJsonPath)) {
-      fs.readFile(packageJsonPath, 'utf8', (err, data) => {
+      fs.readFile(packageJsonPath, "utf8", (err, data) => {
         if (err) {
-            vscode.window.showErrorMessage('Error reading package.json file: ' + err.message);
-            return;
+          vscode.window.showErrorMessage(
+            "Error reading package.json file: " + err.message
+          );
+          return;
         }
         try {
           const packageJson = JSON.parse(data);
-          const dependencies = packageJson.dependencies ? Object.entries(packageJson.dependencies).map(([name, version]) => ({ name, version, isDev:false })) : [];
-          const devDependencies = packageJson.devDependencies ? Object.entries(packageJson.devDependencies).map(([name, version]) => ({ name, version, isDev:true })) : [];
-          result = [...dependencies, ...devDependencies];   
-        }
-        catch (parseError) {
-                vscode.window.showErrorMessage('Error parsing package.json file: ' + parseError);
+          const dependencies = packageJson.dependencies
+            ? Object.entries(packageJson.dependencies).map(
+                ([name, version]) => ({ name, version, isDev: false })
+              )
+            : [];
+          const devDependencies = packageJson.devDependencies
+            ? Object.entries(packageJson.devDependencies).map(
+                ([name, version]) => ({ name, version, isDev: true })
+              )
+            : [];
+          result = [...dependencies, ...devDependencies];
+        } catch (parseError) {
+          vscode.window.showErrorMessage(
+            "Error parsing package.json file: " + parseError
+          );
         }
       });
-    }else{
-      vscode.window.showErrorMessage('No package.json found in the workspace');
+    } else {
+      vscode.window.showErrorMessage("No package.json found in the workspace");
     }
     return result;
   }
-  
+
   audit() {
     const terminal = vscode.window.createTerminal();
     terminal.sendText(`${this.name} audit`);
@@ -70,12 +84,11 @@ export default class Client {
       case "bun":
         command = "bun add";
         break;
-      
     }
     const terminal = vscode.window.createTerminal();
     terminal.sendText(`${command} ${packageNames}`);
   }
-  update( packageNames: string) {
+  update(packageNames: string) {
     let command = "";
     switch (this.name) {
       case "npm":
@@ -90,7 +103,6 @@ export default class Client {
       case "bun":
         command = "bun update";
         break;
-      
     }
 
     const terminal = vscode.window.createTerminal();
@@ -111,38 +123,58 @@ export default class Client {
       case "bun":
         command = "bun remove";
         break;
-      
     }
     const terminal = vscode.window.createTerminal();
     terminal.sendText(`${command} ${packageNames}`);
   }
-  install(){
+  install() {
     const terminal = vscode.window.createTerminal();
     terminal.sendText(`${this.name} install`);
-    vscode.window.showInformationMessage('Script execution finished succesfully.');
-    
+    vscode.window.showInformationMessage(
+      "Script execution finished succesfully."
+    );
   }
 
   addDevDependencies(packageNames: string) {
-      let command = "";
-      switch (this.name) {
-        case "npm":
-          command = "npm install --save-dev";
-          break;
-        case "yarn":
-          command = "yarn add --dev";
-          break;
-        case "pnpm":
-          command = "pnpm install --save-dev";
-          break;
-        case "bun":
-          command = "bun add --development";
-          break;
-        default:
-          throw new Error("Unsupported package manager");
-      }
-      const terminal = vscode.window.createTerminal();
-      terminal.sendText(`${command} ${packageNames}`);
+    let command = "";
+    switch (this.name) {
+      case "npm":
+        command = "npm install --save-dev";
+        break;
+      case "yarn":
+        command = "yarn add --dev";
+        break;
+      case "pnpm":
+        command = "pnpm install --save-dev";
+        break;
+      case "bun":
+        command = "bun add --development";
+        break;
+      default:
+        throw new Error("Unsupported package manager");
     }
+    const terminal = vscode.window.createTerminal();
+    terminal.sendText(`${command} ${packageNames}`);
+  }
 
+  getScript(scriptName: string) {
+    let command = "";
+    switch (this.name) {
+      case "npm":
+        command = "npm run";
+        break;
+      case "yarn":
+        command = "yarn";
+        break;
+      case "pnpm":
+        command = "pnpm run";
+        break;
+      case "bun":
+        command = "bun run";
+        break;
+      default:
+        throw new Error("Unsupported package manager");
+    }
+    return `${command} ${scriptName}`;
+  }
 }
