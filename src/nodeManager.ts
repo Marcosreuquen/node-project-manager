@@ -129,10 +129,16 @@ export default class Client {
   }
   install() {
     const terminal = vscode.window.createTerminal();
+    terminal.show();
     terminal.sendText(`${this.name} install`);
-    vscode.window.showInformationMessage(
-      "Script execution finished succesfully."
-    );
+    terminal.sendText("exit");
+    vscode.window.onDidCloseTerminal((t) => {
+      if (t.processId === terminal.processId) {
+        vscode.window.showInformationMessage(
+          `Script execution finished succesfully...`
+        );
+      }
+    });
   }
 
   addDevDependencies(packageNames: string) {
