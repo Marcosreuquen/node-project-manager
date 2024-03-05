@@ -1,9 +1,9 @@
-import * as vscode from 'vscode';
-import * as fs from 'fs';
+import * as vscode from "vscode";
+import * as fs from "fs";
+import Terminal from "./terminal.controller";
 
-
-declare type PackageManagerName = "npm" | "yarn" | "pnpm" | "bun" 
-declare type InstalledPackages = { name: string, version:any, isDev:boolean }
+declare type PackageManagerName = "npm" | "yarn" | "pnpm" | "bun";
+declare type InstalledPackages = { name: string; version: any; isDev: boolean };
 export default class Client {
   name: PackageManagerName;
   constructor(name?: PackageManagerName) {
@@ -66,8 +66,9 @@ export default class Client {
   }
 
   audit() {
-    const terminal = vscode.window.createTerminal();
-    terminal.sendText(`${this.name} audit`);
+    new Terminal()
+      .send({ command: `${this.name} audit}` })
+      .then((t) => t.close());
   }
   add(packageNames: string) {
     let command = "";
@@ -85,8 +86,12 @@ export default class Client {
         command = "bun add";
         break;
     }
-    const terminal = vscode.window.createTerminal();
-    terminal.sendText(`${command} ${packageNames}`);
+    new Terminal()
+      .send({
+        command: `${command} ${packageNames}`,
+        message: "Packages installed successfully.",
+      })
+      .then((t) => t.close());
   }
   update(packageNames: string) {
     let command = "";
@@ -104,9 +109,12 @@ export default class Client {
         command = "bun update";
         break;
     }
-
-    const terminal = vscode.window.createTerminal();
-    terminal.sendText(`${this.name} ${packageNames}`);
+    new Terminal()
+      .send({
+        command: `${this.name} ${packageNames}`,
+        message: "Packages updated successfully.",
+      })
+      .then((t) => t.close());
   }
   remove(packageNames: string) {
     let command = "";
@@ -124,15 +132,20 @@ export default class Client {
         command = "bun remove";
         break;
     }
-    const terminal = vscode.window.createTerminal();
-    terminal.sendText(`${command} ${packageNames}`);
+    new Terminal()
+      .send({
+        command: `${command} ${packageNames}`,
+        message: `${packageNames} was successfully removed.`,
+      })
+      .then((t) => t.close());
   }
   install() {
-    const terminal = vscode.window.createTerminal();
-    terminal.sendText(`${this.name} install`);
-    vscode.window.showInformationMessage(
-      "Script execution finished succesfully."
-    );
+    new Terminal()
+      .send({
+        command: `${this.name} install`,
+        message: "Packages installed successfully.",
+      })
+      .then((t) => t.close());
   }
 
   addDevDependencies(packageNames: string) {
@@ -153,8 +166,12 @@ export default class Client {
       default:
         throw new Error("Unsupported package manager");
     }
-    const terminal = vscode.window.createTerminal();
-    terminal.sendText(`${command} ${packageNames}`);
+    new Terminal()
+      .send({
+        command: `${command} ${packageNames}`,
+        message: `${packageNames} was successfully added.`,
+      })
+      .then((t) => t.close());
   }
 
   getScript(scriptName: string) {
