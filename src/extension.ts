@@ -1,6 +1,9 @@
 import * as vscode from 'vscode';
-import { extractAndDisplayScripts, addNewScript } from './scriptsManager';
-import Client from './nodeManager';
+import {
+  extractAndDisplayScripts,
+  addNewScript,
+} from "./controllers/scripts.controller";
+import Client from "./controllers/node.controller";
 
 
 export function activate(context: vscode.ExtensionContext) {

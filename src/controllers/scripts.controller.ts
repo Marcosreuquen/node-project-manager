@@ -1,6 +1,6 @@
-import * as vscode from 'vscode';
-import * as fs from 'fs';
-import Client from "./nodeManager";
+import * as vscode from "vscode";
+import * as fs from "fs";
+import Client from "./node.controller";
 export async function extractAndDisplayScripts() {
   // Get the path to the package.json file in the workspace
   const packageJsonPath = vscode.workspace.rootPath + "/package.json";
@@ -32,7 +32,7 @@ export async function extractAndDisplayScripts() {
           quickPick.placeholder = "Select a script to run...";
           quickPick.items = scripts.map((script) => ({
             label: script.name,
-            detail: client.getScript(script.name),
+            detail: `${script.name} - ${script.command}`,
             picked: false,
           }));
 
@@ -43,7 +43,7 @@ export async function extractAndDisplayScripts() {
                 selectedScript.label
               );
               terminal.show();
-              terminal.sendText(`${selectedScript.detail}`);
+              terminal.sendText(`${client.getScript(selectedScript.label)}`);
             }
           });
 
@@ -66,47 +66,61 @@ export async function extractAndDisplayScripts() {
   }
 }
 
-export async function addNewScript( scriptName: string, scriptCommand: string) {
+export async function addNewScript(scriptName: string, scriptCommand: string) {
   // Get the path to the package.json file in the workspace
-  const packageJsonPath = vscode.workspace.rootPath + '/package.json';
+  const packageJsonPath = vscode.workspace.rootPath + "/package.json";
 
   // Check if package.json exists
   if (fs.existsSync(packageJsonPath)) {
-      // Read the contents of package.json
-      fs.readFile(packageJsonPath, 'utf8', (err, data) => {
-          if (err) {
-              vscode.window.showErrorMessage('Error reading package.json file: ' + err.message);
-              return;
-          }
+    // Read the contents of package.json
+    fs.readFile(packageJsonPath, "utf8", (err, data) => {
+      if (err) {
+        vscode.window.showErrorMessage(
+          "Error reading package.json file: " + err.message
+        );
+        return;
+      }
 
-          try {
-              // Parse package.json content to JSON object
-              const packageJson = JSON.parse(data);
+      try {
+        // Parse package.json content to JSON object
+        const packageJson = JSON.parse(data);
 
-              // Check if scripts property exists
-              if (packageJson.scripts) {
-                  // Extract script names and commands
-                  const scripts = packageJson.scripts;
-                  scripts[scriptName] = scriptCommand;
-                  packageJson.scripts = scripts;
-                  
-                  // Write updated package.json content
-                  fs.writeFile(packageJsonPath, JSON.stringify(packageJson, null, 2), 'utf8', (err) => {
-                      if (err) {
-                          vscode.window.showErrorMessage('Error writing package.json file: ' + err.message);
-                          return;
-                      }
-                      vscode.window.showInformationMessage('Script added to package.json');
-                  });
-                  
-              } else {
-                  vscode.window.showInformationMessage('No scripts found in package.json');
+        // Check if scripts property exists
+        if (packageJson.scripts) {
+          // Extract script names and commands
+          const scripts = packageJson.scripts;
+          scripts[scriptName] = scriptCommand;
+          packageJson.scripts = scripts;
+
+          // Write updated package.json content
+          fs.writeFile(
+            packageJsonPath,
+            JSON.stringify(packageJson, null, 2),
+            "utf8",
+            (err) => {
+              if (err) {
+                vscode.window.showErrorMessage(
+                  "Error writing package.json file: " + err.message
+                );
+                return;
               }
-          } catch (parseError) {
-              vscode.window.showErrorMessage('Error parsing package.json file: ' + parseError);
-          }
-      });
+              vscode.window.showInformationMessage(
+                "Script added to package.json"
+              );
+            }
+          );
+        } else {
+          vscode.window.showInformationMessage(
+            "No scripts found in package.json"
+          );
+        }
+      } catch (parseError) {
+        vscode.window.showErrorMessage(
+          "Error parsing package.json file: " + parseError
+        );
+      }
+    });
   } else {
-      vscode.window.showErrorMessage('No package.json found in the workspace');
+    vscode.window.showErrorMessage("No package.json found in the workspace");
   }
 }
