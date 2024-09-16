@@ -5,7 +5,7 @@
 	"version": "0.0.4",
 	"publisher": "marcosreuquen",
 	"repository": "https://github.com/Marcosreuquen/node-project-manager",
-	"icon": "public/node-priject-manager.png",
+	"icon": "./src/images/node-project-manager.png",
 	"license": "MIT",
 	"keywords": [
 		"node",
