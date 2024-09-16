@@ -5,6 +5,24 @@
 	"version": "0.0.3",
 	"publisher": "marcosreuquen",
 	"repository": "https://github.com/Marcosreuquen/node-project-manager",
+	"icon": "public/node-priject-manager.png",
+	"license": "MIT",
+	"keywords": [
+		"node",
+		"project",
+		"dependencies",
+		"devDependencies",
+		"scripts",
+		"command",
+		"extension"
+	],
+	"homepage": "https://github.com/Marcosreuquen/node-project-manager",
+	"author": {
+		"name": "Marcos Reuquen Diaz",
+		"url": "https://marcosdiaz.dev",
+		"username": "Marcosreuquen",
+		"email": "marcosreuquendiaz@gmail.com"
+	},
 	"engines": {
 		"vscode": "^1.74.0"
 	},
