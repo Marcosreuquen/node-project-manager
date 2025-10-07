@@ -1,6 +1,19 @@
 import * as vscode from "vscode";
 import * as fs from "fs";
 import Client from "./node.controller";
+import { ValidationUtils } from "../utils/validation.utils";
+
+export async function runScript(scriptName: string): Promise<void> {
+	try {
+		const client = new Client();
+		const terminal = vscode.window.createTerminal(`Run: ${scriptName}`);
+		terminal.show();
+		terminal.sendText(client.getScript(scriptName));
+		await ValidationUtils.showSuccessMessage(`Running script: ${scriptName}`);
+	} catch (error) {
+		await ValidationUtils.showErrorMessage(`Failed to run script: ${error}`);
+	}
+}
 export async function extractAndDisplayScripts() {
   // Get the path to the package.json file in the workspace
   const packageJsonPath = vscode.workspace.rootPath + "/package.json";
@@ -36,16 +49,18 @@ export async function extractAndDisplayScripts() {
             picked: false,
           }));
 
-          quickPick.onDidChangeSelection((selection) => {
-            if (selection[0]) {
-              const selectedScript = selection[0];
-              const terminal = vscode.window.createTerminal(
-                selectedScript.label
-              );
-              terminal.show();
-              terminal.sendText(`${client.getScript(selectedScript.label)}`);
-            }
-          });
+          quickPick.onDidAccept(() => {
+						const selection = quickPick.selectedItems;
+						if (selection[0]) {
+							const selectedScript = selection[0];
+							const terminal = vscode.window.createTerminal(
+								selectedScript.label
+							);
+							terminal.show();
+							terminal.sendText(`${client.getScript(selectedScript.label)}`);
+							quickPick.hide();
+						}
+					});
 
           quickPick.onDidHide(() => quickPick.dispose());
 

@@ -2,7 +2,7 @@
 	"name": "node-project-manager",
 	"displayName": "node-project-manager",
 	"description": "A command palette extension for managing node projects",
-	"version": "0.0.4",
+	"version": "1.0.0",
 	"publisher": "marcosreuquen",
 	"repository": "https://github.com/Marcosreuquen/node-project-manager",
 	"icon": "./src/images/node-project-manager.png",
@@ -33,6 +33,11 @@
 	"main": "./out/extension.js",
 	"contributes": {
 		"commands": [
+			{
+				"command": "extension.nodeProjectManager",
+				"title": "Open Node Project Manager",
+				"category": "Node Project Manager"
+			},
 			{
 				"command": "extension.useScripts",
 				"title": "Use Project Scripts",
@@ -73,7 +78,56 @@
 				"title": "Add a dev dependency to your project",
 				"category": "Node Project Manager"
 			}
-		]
+		],
+		"configuration": {
+			"title": "Node Project Manager",
+			"properties": {
+				"nodeProjectManager.packageManager": {
+					"type": "string",
+					"enum": [
+						"npm",
+						"yarn",
+						"pnpm",
+						"bun"
+					],
+					"default": "npm",
+					"description": "Choose your preferred package manager"
+				},
+				"nodeProjectManager.showTerminal": {
+					"type": "boolean",
+					"default": true,
+					"description": "Show terminal when running commands"
+				},
+				"nodeProjectManager.confirmActions": {
+					"type": "boolean",
+					"default": true,
+					"description": "Ask for confirmation before destructive actions"
+				}
+			}
+		},
+		"keybindings": [
+			{
+				"command": "extension.nodeProjectManager",
+				"key": "ctrl+alt+n",
+				"mac": "cmd+alt+n",
+				"when": "workspaceFolderCount > 0"
+			}
+		],
+		"menus": {
+			"commandPalette": [
+				{
+					"command": "extension.nodeProjectManager",
+					"when": "workspaceFolderCount > 0"
+				}
+			],
+			"explorer/context": [
+				{
+					"command": "extension.nodeProjectManager",
+					"when": "resourceFilename == package.json",
+					"group": "navigation"
+				}
+			]
+		}
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
