@@ -243,7 +243,9 @@ describe('ValidationUtils', () => {
       ];
 
       invalidNames.forEach(name => {
-        expect(ValidationUtils.validatePackageNameWithVersion(name)).toBe(false);
+        expect(ValidationUtils.validatePackageNameWithVersion(name)).toBe(
+          false
+        );
       });
     });
   });
@@ -259,7 +261,9 @@ describe('ValidationUtils', () => {
       ];
 
       validInputs.forEach(input => {
-        expect(ValidationUtils.validatePackageNameWithVersionInput(input)).toBeNull();
+        expect(
+          ValidationUtils.validatePackageNameWithVersionInput(input)
+        ).toBeNull();
       });
     });
 
@@ -270,10 +274,16 @@ describe('ValidationUtils', () => {
       expect(ValidationUtils.validatePackageNameWithVersionInput('   ')).toBe(
         'Package name cannot be empty'
       );
-      expect(ValidationUtils.validatePackageNameWithVersionInput('invalid package@1.0.0')).toBe(
+      expect(
+        ValidationUtils.validatePackageNameWithVersionInput(
+          'invalid package@1.0.0'
+        )
+      ).toBe(
         'Invalid package name or version. Examples: lodash, lodash@4.0.0, @types/node@latest'
       );
-      expect(ValidationUtils.validatePackageNameWithVersionInput('package@')).toBe(
+      expect(
+        ValidationUtils.validatePackageNameWithVersionInput('package@')
+      ).toBe(
         'Invalid package name or version. Examples: lodash, lodash@4.0.0, @types/node@latest'
       );
     });
