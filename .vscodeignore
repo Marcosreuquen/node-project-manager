@@ -1,0 +1,47 @@
+# Build and source files
+src/
+!src/images/
+tsconfig.json
+jest.config.js
+.eslintrc.json
+.prettierrc
+.prettierignore
+
+# Development dependencies
+coverage/
+.nyc_output/
+
+# Git and GitHub
+.git/
+.github/
+.gitignore
+
+# Documentation (keep README)
+dev.md
+CHANGELOG.md
+
+# Node modules and dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Test files
+**/__tests__/
+**/*.test.ts
+**/*.spec.ts
+
+# IDE
+.vscode/settings.json
+.vscode/launch.json
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
